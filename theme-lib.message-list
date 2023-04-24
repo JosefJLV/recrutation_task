@@ -6,7 +6,7 @@
 <#assign showPaging = "true" />
 <#assign sorting = http.request.parameters.name.get("sort", "") />
  
-<#-- page size -->
+<#-- page size --> 
 <#assign pageSize = coreNode.settings.name.get("layout.messages_per_page_linear", "10")?number />
 <#if user.registered>
    <#assign pageSizeUser = settings.name.get("layout.messages_per_page_linear") />
@@ -38,14 +38,31 @@
    <#case "kudos">
        <#assign orderClause = "ORDER BY kudos.sum(weight) DESC " />
    <#break>
+
+   <#-- create sorting clause based on selected option -->
+    <#case "kudosAsc">
+    <#assign orderClause = "ORDER BY kudos.sum(weight) ASC"/>
+   <#break>
+   <#case "noSolution">
+      <#assign whereClause = whereClause + " AND conversation.solved = false" />
+      <#assign orderClause = "ORDER BY conversation.last_post_time DESC" />
+   <#break>
+   <#case "unanswered">
+      <#assign whereClause = whereClause + " AND replies.count(*) = 0" />
+      <#assign orderClause = "ORDER BY conversation.last_post_time DESC" />
+   <#break>
+   <#case "postTimeAsc">
+       <#assign orderClause = "ORDER BY post_time ASC" />
+   <#break>
+  
    <#case "views">
-       <#assign orderClause = "ORDER BY metrics.views DESC " />
+       <#assign orderClause = "ORDER BY metrics.views DESC" />
    <#break>
    <#case "replies">
-       <#assign orderClause = "ORDER BY replies.count(*) DESC " />
+       <#assign orderClause = "ORDER BY replies.count(*) DESC" />
    <#break>
    <#default>
-       <#assign orderClause = "ORDER BY conversation.last_post_time DESC " />
+       <#assign orderClause = "ORDER BY conversation.last_post_time DESC" />
    <#break>
 </#switch>
  
@@ -76,6 +93,11 @@
                    <option value="views" <#if sorting == 'views'>selected</#if>>${text.format("theme-lib.community-activity.views")}</option>
                    <option value="replies" <#if sorting == 'replies'>selected</#if>>${text.format("theme-lib.community-activity.replies")}</option>
                    <option value="kudos" <#if sorting == 'kudos'>selected</#if>>${text.format("theme-lib.community-activity.kudos")}</option>
+                  <#--New Dropdown -->
+                   <option value="kudosAsc" <#if sorting == 'kudosAsc'>selected</#if>>${text.format("theme-lib.community-activity.kudos")}</option>
+                   <option value = "noSolution" <#if sorting == 'noSolution'>selected</#if>>${text.format("theme-lib.community-activity.noSolution")}</option>
+                   <option value = "unanswered" <#if sorting == 'unanswered'>selected</#if>>${text.format("theme-lib.community-activity.unanswered")}</option>
+                   <option value = "postTimeAsc" <#if sorting == 'postTimeAsc'>selected</#if>>${text.format("theme-lib.community-activity.postTimeAsc")}</option>
                </select>
                <#if page.interactionStyle=="idea">
                  <@component id="custom.idea.status.label" />
@@ -109,6 +131,7 @@
 </div>
 <#-- pagination -->
 <#if showPaging == "true">
+   <#assign pageSize = 30>
    <#assign pagingQry = basePagingQry + whereClause />
    <#assign topicCnt = commonUtils.executeLiQLQuery(pagingQry, true) />
    <#assign pageableItem = webuisupport.paging.pageableItem.setCurrentPageNumber(pageNum).setItemsPerPage(pageSize?number).setTotalItems(topicCnt).setPagingMode("enumerated").build />
