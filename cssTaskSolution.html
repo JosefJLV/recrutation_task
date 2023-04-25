@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .dropdown {
+            position: relative;
+            display: flex; 
+            justify-content: center;
+        }
+
+        .dropdown-label {
+            padding: 8px 16px;
+            cursor: pointer; /* set cursor to default to disable pointer on hover */
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .dropdown-arrow {
+            display: inline-block; /*set "display: none" to hide the dropdown arrow */
+            width: 0;
+            height: 0;
+            margin-left: 4px;
+            vertical-align: middle;
+            border-top: 4px solid #666;
+            border-right: 4px solid transparent;
+            border-left: 4px solid transparent;
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 52%;
+            z-index: 1;
+            display: none;
+            min-width: 160px;
+            padding: 8px 0;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, .15);
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;/*display:none*/
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dropdown">
+        <div class="dropdown-label">
+            Top Labels
+            <span class="dropdown-arrow"></span>
+        </div>
+        <div class="dropdown-content">
+            <a href="#">Label 1</a>
+            <a href="#">Label 2</a>
+            <a href="#">Label 3</a>
+        </div>
+    </div>
+
+</body>
+
+</html>
